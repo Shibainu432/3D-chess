@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3D Volumetric Chess 8x8x8</title>
+    <!-- Load Tailwind CSS for fast styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Load Three.js for 3D rendering -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            overflow: hidden;
+            background-color: #1a202c;
+        }
+        body.resizing {
+            cursor: col-resize;
+            user-select: none;
+        }
+        #game-container {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        canvas {
+            display: block;
+            image-rendering: crisp-edges;
+            image-rendering: pixelated;
+        }
+        .layer-canvas-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            border-radius: 4px;
+            overflow: hidden;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+            transition: all 0.2s;
+            cursor: pointer; /* Indicate interactivity */
+        }
+        .layer-canvas-container.active {
+            border: 2px solid #facc15; /* Yellow border for layer containing selected piece */
+            box-shadow: 0 0 10px #facc15;
+        }
+    </style>
+</head>
+<body>
+
+<!-- Main Lichess-Style Layout -->
+<div class="flex flex-col lg:flex-row h-screen w-screen bg-gray-900 text-white">
+
+    <!-- Left Panel (8x 2D Boards + Score) -->
+    <div id="info-panel" class="p-4 flex flex-col space-y-4 overflow-y-auto flex-shrink-0" style="width: 25%;">
+        
+        <h1 class="text-3xl font-extrabold text-pink-400 text-center mb-2">3D Volumetric Chess</h1>
+        
+        <!-- Score/Turn Indicator Section -->
+        <div class="space-y-4">
+            <!-- Black Player/Score Panel (Top) -->
+            <div id="black-score-panel" class="bg-gray-800 p-3 rounded-lg shadow-xl border-t-4 border-gray-700">
+                <div class="font-bold text-lg flex justify-between items-center">
+                    <span class="text-gray-300">Black Player</span>
+                    <span id="black-score" class="text-red-400 font-mono text-xl">+0</span>
+                </div>
+                <div id="captured-by-white" class="text-sm text-gray-400 h-6">
+                    <!-- Captured Black pieces shown here -->
+                </div>
+            </div>
+
+            <!-- Material Difference Display -->
+            <div id="material-display" class="text-center h-10 flex items-center justify-center">
+                <span class="text-3xl font-mono font-bold text-green-400" id="material-advantage-text"></span>
+            </div>
+            
+            <!-- Turn Indicator -->
+            <div class="text-center p-3 rounded-lg bg-gray-800 shadow-lg">
+                <p class="text-sm text-gray-400">Current Turn:</p>
+                <h2 class="text-2xl font-bold" id="turn-indicator-large">WHITE</h2>
+            </div>
+            
+            <!-- White Player/Score Panel (Bottom) -->
+            <div id="white-score-panel" class="bg-gray-800 p-3 rounded-lg shadow-xl border-b-4 border-gray-700">
+                <div class="font-bold text-lg flex justify-between items-center">
+                    <span class="text-white">White Player</span>
+                    <span id="white-score" class="text-red-400 font-mono text-xl">+0</span>
+                </div>
+                <div id="captured-by-black" class="text-sm text-gray-400 h-6">
+                    <!-- Captured White pieces shown here -->
+                </div>
+            </div>
+        </div>
+
+        <!-- 8x 2D Layers Grid -->
+        <h2 class="text-lg font-bold text-center text-gray-300 mt-4 mb-2">Volumetric Layers (Click to Play)</h2>
+        <div id="layers-container" class="grid grid-cols-2 gap-3 p-1">
+            <!-- Canvases Z=0 to Z=7 will be inserted here by JS -->
+        </div>
+
+        <!-- Instructions/Footer -->
+        <div class="text-center text-xs text-gray-500 mt-auto pt-4">
+            <p>Use 2D boards to select pieces and make moves.</p>
+            <p>Use mouse on 3D board to rotate/zoom for visualization.</p>
+        </div>
+    </div>
+
+    <!-- Resizer Handle -->
+    <div id="resizer" class="w-1.5 cursor-col-resize bg-gray-700 hover:bg-pink-400 transition-colors duration-200 flex-shrink-0"></div>
+
+    <!-- Right Panel (3D Board) -->
+    <div id="board-panel" class="h-full relative flex-1">
+        <div id="game-container" class="w-full h-full">
+            <!-- Three.js canvas goes here -->
+        </div>
+    </div>
+</div>
+
+<script type="module" src="/index.tsx"></script>
+</body>
+</html>
